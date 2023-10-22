@@ -2,9 +2,27 @@
 #include <httplib.h>
 #include <nlohmann/json.hpp>
 #include <string>
+#include <ctype.h>
 
 using json = nlohmann::json;
 int mainMenu();
+
+void reset() 
+{
+    // Clear cin buffer
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    mainMenu();
+}
+
+void toUppercase(char* charArray)
+{
+    int i = 0;
+    while (charArray[i] != '\0')
+    {
+        charArray[i++] = toupper((unsigned char)charArray[i]);
+    }
+}
 
 // Function to to get JSON responses from the openexchangerates API
 json apiGetter(std::string urlToGet)
@@ -36,7 +54,7 @@ int displayCurrencies()
                   << "# Press any key to return to menu.       #\n"
                   << "#----------------------------------------#" << std::endl;
         system("pause");
-        mainMenu();
+        reset();
 
         return 1;
     }
@@ -52,7 +70,7 @@ int displayCurrencies()
               << "# Press any key to return to menu.       #\n"
               << "#----------------------------------------#"   << std::endl;
     system("pause");
-    mainMenu();
+    reset();
 
     return 0;
 }
@@ -74,7 +92,7 @@ int displayExchangeRate()
                   << "# Press any key to return to menu.       #\n"
                   << "#----------------------------------------#" << std::endl;
         system("pause");
-        mainMenu();
+        reset();
 
         return 1;
     }
@@ -88,7 +106,7 @@ int displayExchangeRate()
               << "# Press any key to return to menu.       #\n"
               << "#----------------------------------------#" << std::endl;
     system("pause");
-    mainMenu();
+    reset();
 
     return 0;
 }
@@ -102,11 +120,9 @@ int convertCurrency()
     double amount;
     char fromCurrency[4]{};
     char toCurrency[4]{};
-
     double toUsd;
     double toTargetCurrency;
 
-    
     // For error checking the user interaction, we put everything in a try/catch block
     try 
     {
@@ -154,16 +170,14 @@ int convertCurrency()
                   << "#----------------------------------------#" << std::endl;
 
         system("pause");
-
-        // Clear cin buffer
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-        mainMenu();
+        reset();
 
         return 1;
     }
 
+    // Set fromCurrency and toCurrency uppercase
+    toUppercase(fromCurrency);
+    toUppercase(toCurrency);
     
     // Get exchange rate using api key.
     std::string apiKey = "";
@@ -177,33 +191,44 @@ int convertCurrency()
                   << "# Press any key to return to menu.       #\n"
                   << "#----------------------------------------#" << std::endl;
         system("pause");
-
-        // Clear cin buffer
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-        mainMenu();
-
+        reset();
         return 1;
     }
 
+    auto& rates = latestExchangeRateResp["rates"];
+
+    if (rates.find(fromCurrency) == rates.end() || rates.find(toCurrency) == rates.end())
+    {
+        std::cout << "#----------------------------------------#\n"
+                  << "# Starting/ending currency is invalid.   #\n"
+                  << "# Press any key to return to menu.       #\n"
+                  << "#----------------------------------------#" << std::endl;
+        system("pause");
+        reset();
+        return 1;
+
+    }
+
     // Convert to USD
-    toUsd = amount / (double)latestExchangeRateResp["rates"][fromCurrency];
+    toUsd = amount / (double)rates[fromCurrency];
 
     // Convert from usd to target currency
-    toTargetCurrency = toUsd * (double)latestExchangeRateResp["rates"][toCurrency];
+    toTargetCurrency = toUsd * (double)rates[toCurrency];
 
     // Output
-    std::cout << toTargetCurrency << std::endl;
+    std::cout << toTargetCurrency << " " << toCurrency << std::endl;
 
     system("pause");
-    mainMenu();
+    reset();
 
     return 0;
 }
 
-int mainMenu() {
+int mainMenu() 
+{
+    // Clear terminal contents beforehand
     system("cls");
+
     char choice;
 
     std::cout << "#----------------------------------------#\n"
@@ -227,11 +252,7 @@ int mainMenu() {
         return convertCurrency();
         break;
     default:
-        // Clear cin buffer
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        // Go back to start of mainMenu()
-        mainMenu();
+        reset();
         break;
     }
 
@@ -240,12 +261,9 @@ int mainMenu() {
 
 int main()
 {
-    
     // Clear terminal contents beforehand
     system("cls");
 
     // Menu
     return mainMenu();
-        
 }
-
