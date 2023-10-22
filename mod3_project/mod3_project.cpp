@@ -6,14 +6,16 @@
 using json = nlohmann::json;
 int mainMenu();
 
+// Function to to get JSON responses from the openexchangerates API
 json apiGetter(std::string urlToGet)
 {
     httplib::Client cli("openexchangerates.org");
     cli.set_default_headers({ {"accept","application/json"} });
     auto res = cli.Get(urlToGet);
 
-    if (res == nullptr)
-        return 1;
+    // If response was an error, return null
+    if (res->status >= 400)
+        return NULL;
 
     std::string bodyResponse = res->body;
     return json::parse(bodyResponse);
@@ -26,11 +28,27 @@ int displayCurrencies()
 
     json bodyData = apiGetter("/api/currencies.json?prettyprint=false&show_alternatives=false");
 
+    // If response was null, return early.
+    if (bodyData == NULL) 
+    {
+        std::cout << "#----------------------------------------#\n"
+                  << "# Could not get currency information.    #\n"
+                  << "# Press any key to return to menu.       #\n"
+                  << "#----------------------------------------#" << std::endl;
+        system("pause");
+        mainMenu();
+
+        return 1;
+    }
+
+    unsigned short currencyAmount = 0;
     std::cout << "#----------------------------------------#" << std::endl;
     for (auto& elem : bodyData.items()) {
         std::cout << elem.key() << ", " << elem.value() << std::endl;
+        currencyAmount++;
     }
-    std::cout << "#----------------------------------------#\n"
+    std::cout << "There are " << currencyAmount << " supported currencies.\n"
+              << "#----------------------------------------#\n"
               << "# Press any key to return to menu.       #\n"
               << "#----------------------------------------#"   << std::endl;
     system("pause");
@@ -41,10 +59,25 @@ int displayCurrencies()
 
 int displayExchangeRate()
 {
+    // Clear terminal contents beforehand
     system("cls");
 
+    // Get exchange rate using api key.
     std::string apiKey = "";
     json latestExchangeRateResp = apiGetter("/api/latest.json?app_id="+apiKey+"&show_alternative = false");
+
+    // If response was null, return early.
+    if (latestExchangeRateResp == NULL)
+    {
+        std::cout << "#----------------------------------------#\n"
+                  << "# Could not get currency information.    #\n"
+                  << "# Press any key to return to menu.       #\n"
+                  << "#----------------------------------------#" << std::endl;
+        system("pause");
+        mainMenu();
+
+        return 1;
+    }
 
     std::cout << "#----------------------------------------#\n"
               << "# From base USD:                         #" << std::endl;
@@ -62,40 +95,105 @@ int displayExchangeRate()
 
 int convertCurrency()
 {
+    // Clear terminal contents beforehand
     system("cls");
 
-    long double amount;
+    // Variable initializations
+    double amount;
     char fromCurrency[4]{};
     char toCurrency[4]{};
 
-    long double toUsd;
-    long double toTargetCurrency;
+    double toUsd;
+    double toTargetCurrency;
 
-    std::cout << "#----------------------------------------#\n"
-              << "# Input your desired amount:             #\n"
-              << "#----------------------------------------#" << std::endl;
+    
+    // For error checking the user interaction, we put everything in a try/catch block
+    try 
+    {
+        std::cout << "#----------------------------------------#\n"
+                  << "# Input your desired amount:             #\n"
+                  << "#----------------------------------------#" << std::endl;
 
-    std::cin >> amount;
+        std::cin >> amount;
+        if (std::cin.fail())
+            throw 2;
 
-    std::cout << "#----------------------------------------#\n"
-              << "# Input from currency                    #\n"
-              << "#----------------------------------------#" << std::endl;
-    std::cin >> fromCurrency;
+        std::cout << "#----------------------------------------#\n"
+                  << "# Input from currency                    #\n"
+                  << "#----------------------------------------#" << std::endl;
+        std::cin >> fromCurrency;
+        if (std::cin.fail())
+            throw 3;
 
-    std::cout << "#----------------------------------------#\n"
-              << "# Input to currency                      #\n"
-              << "#----------------------------------------#" << std::endl;
-    std::cin >> toCurrency;
+        std::cout << "#----------------------------------------#\n"
+                  << "# Input to currency                      #\n"
+                  << "#----------------------------------------#" << std::endl;
+        std::cin >> toCurrency;
+        if (std::cin.fail())
+            throw 4;
+    }
+    catch (int errorCode) 
+    {
+        std::string error;
 
+        switch (errorCode) 
+        {
+        case 2:
+            error = "# Error inputting amount.                #\n";
+            break;
+        case 3:
+            error = "# Error inputting from currency.         #\n";
+            break;
+        case 4:
+            error = "# Error inputting to currency.           #\n";
+            break;
+        }
+        std::cout << "#----------------------------------------#\n"
+                  << error 
+                  << "# Press any key to return to menu.       #\n"
+                  << "#----------------------------------------#" << std::endl;
+
+        system("pause");
+
+        // Clear cin buffer
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        mainMenu();
+
+        return 1;
+    }
+
+    
+    // Get exchange rate using api key.
     std::string apiKey = "";
     json latestExchangeRateResp = apiGetter("/api/latest.json?app_id=" + apiKey + "&show_alternative = false");
 
-    // convert to usd
-    toUsd = amount / (long double)latestExchangeRateResp["rates"][fromCurrency];
-    std::cout << amount << " / " << (long double)latestExchangeRateResp["rates"][fromCurrency] << " = " << toUsd << std::endl;
-    toTargetCurrency = toUsd * (long double)latestExchangeRateResp["rates"][toCurrency];
-    std::cout << toUsd << " * " << (long double)latestExchangeRateResp["rates"][toCurrency] << " = " << toTargetCurrency << std::endl;
+    // If response was null, return early.
+    if (latestExchangeRateResp == NULL)
+    {
+        std::cout << "#----------------------------------------#\n"
+                  << "# Could not get currency information.    #\n"
+                  << "# Press any key to return to menu.       #\n"
+                  << "#----------------------------------------#" << std::endl;
+        system("pause");
 
+        // Clear cin buffer
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        mainMenu();
+
+        return 1;
+    }
+
+    // Convert to USD
+    toUsd = amount / (double)latestExchangeRateResp["rates"][fromCurrency];
+
+    // Convert from usd to target currency
+    toTargetCurrency = toUsd * (double)latestExchangeRateResp["rates"][toCurrency];
+
+    // Output
     std::cout << toTargetCurrency << std::endl;
 
     system("pause");
@@ -106,7 +204,7 @@ int convertCurrency()
 
 int mainMenu() {
     system("cls");
-    unsigned char choice;
+    char choice;
 
     std::cout << "#----------------------------------------#\n"
               << "# Welcome to the Billing System!         #\n"
@@ -129,9 +227,15 @@ int mainMenu() {
         return convertCurrency();
         break;
     default:
+        // Clear cin buffer
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        // Go back to start of mainMenu()
         mainMenu();
         break;
     }
+
+    return 0;
 }
 
 int main()
