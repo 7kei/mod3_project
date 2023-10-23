@@ -181,7 +181,7 @@ int convertCurrency()
     
     // Get exchange rate using api key.
     std::string apiKey = "";
-    json latestExchangeRateResp = apiGetter("/api/latest.json?app_id=" + apiKey + "&show_alternative = false");
+    json latestExchangeRateResp = apiGetter("/api/latest.json?app_id="+apiKey+"&show_alternative = false");
 
     // If response was null, return early.
     if (latestExchangeRateResp == NULL)
@@ -215,8 +215,11 @@ int convertCurrency()
     // Convert from usd to target currency
     toTargetCurrency = toUsd * (double)rates[toCurrency];
 
+    // Imbue locale for currency output
+    std::cout.imbue(std::locale(""));
+
     // Output
-    std::cout << toTargetCurrency << " " << toCurrency << std::endl;
+    std::cout << std::put_money(toTargetCurrency * 100) << " " << toCurrency << std::endl;
 
     system("pause");
     reset();
