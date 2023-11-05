@@ -7,6 +7,8 @@
 using json = nlohmann::json;
 int mainMenu();
 
+std::string apiKey = "";
+
 void reset() 
 {
     // Clear cin buffer
@@ -81,7 +83,6 @@ int displayExchangeRate()
     system("cls");
 
     // Get exchange rate using api key.
-    std::string apiKey = "";
     json latestExchangeRateResp = apiGetter("/api/latest.json?app_id="+apiKey+"&show_alternative = false");
 
     // If response was null, return early.
@@ -180,7 +181,6 @@ int convertCurrency()
     toUppercase(toCurrency);
     
     // Get exchange rate using api key.
-    std::string apiKey = "";
     json latestExchangeRateResp = apiGetter("/api/latest.json?app_id="+apiKey+"&show_alternative = false");
 
     // If response was null, return early.
