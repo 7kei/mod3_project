@@ -10,6 +10,7 @@ This is a school project. It converts currency from one to the other. It depends
 
 - Windows 11
 - Visual Studio 2022
+- Qt 6
 - [microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 - [nlohmann/json](https://github.com/nlohmann/json)
 - [yhirose/cpp-httplib](https://github.com/yhirose/cpp-httplib)
@@ -24,11 +25,7 @@ This is a school project. It converts currency from one to the other. It depends
         - `vcpkg install nlohmann-json:x64-windows-static`
         - `vcpkg install cpp-httplib:x64-windows-static`
         - `vcpkg integrate install`
-    - For 32-bit targets:
-        - `vcpkg install nlohmann-json:x86-windows-static`
-        - `vcpkg install cpp-httplib:x86-windows-static`
-        - `vcpkg integrate install`
-3. Add your API key in the code.
+3. Add your API key in the Processing.cpp file.
 4. Compile through Visual Studio 2022 or MSVC.
 
 ## License
