@@ -3,7 +3,6 @@
 #ifndef DISPLAYEXCHANGEWIDGET_H
 #define DISPLAYEXCHANGEWIDGET_H
 
-#include <QWidget>
 #include <QDialog>
 
 class QLabel;

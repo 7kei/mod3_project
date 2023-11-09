@@ -1,4 +1,9 @@
-#include <QtWidgets>
+#include <QWidget>
+#include <QDialog>
+#include <QLabel>
+#include <QScrollArea>
+#include <QGridLayout>
+#include <QScrollBar>
 #include "displayExchangeWidget.h"
 #include "processing.h"
 

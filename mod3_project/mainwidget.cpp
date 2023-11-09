@@ -1,4 +1,9 @@
-#include <QtWidgets>
+#include <QWidget>
+#include <QPushButton>
+#include <QLabel>
+#include <QGridLayout>
+#include <QInputDialog>
+#include <QMessageBox>
 #include "mainwidget.h"
 #include "displayCurrenciesWidget.h"
 #include "displayExchangeWidget.h"

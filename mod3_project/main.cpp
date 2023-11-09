@@ -1,4 +1,4 @@
-#include <QtWidgets>
+#include <QApplication>
 #include "processing.h"
 #include "mainwidget.h"
 

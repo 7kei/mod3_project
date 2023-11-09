@@ -3,7 +3,6 @@
 #ifndef DISPLAYCURRENCIESWIDGET_H
 #define DISPLAYCURRENCIESWIDGET_H
 
-#include <QWidget>
 #include <QDialog>
 
 class QLabel;

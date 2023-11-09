@@ -1,4 +1,8 @@
-#include <QtWidgets>
+#include <QScrollArea>
+#include <QLabel>
+#include <QDialog>
+#include <QGridLayout>
+#include <QScrollBar>
 #include "displayCurrenciesWidget.h"
 #include "processing.h"
 
