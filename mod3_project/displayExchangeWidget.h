@@ -4,12 +4,13 @@
 #define DISPLAYEXCHANGEWIDGET_H
 
 #include <QWidget>
+#include <QDialog>
 
 class QLabel;
 class QScrollArea;
 class QGridLayout;
 
-class DisplayExchangeWidget : public QWidget
+class DisplayExchangeWidget : public QDialog
 {
     Q_OBJECT
 

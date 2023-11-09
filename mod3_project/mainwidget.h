@@ -21,6 +21,7 @@ public:
 private slots:
     void onPressDisplayCurrenciesButton();
     void onPressDisplayExchangeButton();
+    void onPressConvertCurrencyButton();
 
 private:
     QLabel* label_;

@@ -2,13 +2,13 @@
 #include "displayCurrenciesWidget.h"
 #include "processing.h"
 
-DisplayCurrenciesWidget::DisplayCurrenciesWidget(QWidget* parent) : QWidget(parent)
+DisplayCurrenciesWidget::DisplayCurrenciesWidget(QWidget* parent) : QDialog(parent)
 {
 
     std::string* res = new std::string;
     *res = Processing::displayCurrencies();
-
     label_ = new QLabel(tr(res->c_str()));
+    delete res;
 
     scrollArea = new QScrollArea;
     mainLayout = new QGridLayout;
@@ -22,7 +22,6 @@ DisplayCurrenciesWidget::DisplayCurrenciesWidget(QWidget* parent) : QWidget(pare
     setWindowTitle(tr("Supported Currencies"));
     setAttribute(Qt::WA_DeleteOnClose);
 
-    delete res;
 }
 
 // Destructor

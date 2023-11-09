@@ -4,12 +4,13 @@
 #define DISPLAYCURRENCIESWIDGET_H
 
 #include <QWidget>
+#include <QDialog>
 
 class QLabel;
 class QScrollArea;
 class QGridLayout;
 
-class DisplayCurrenciesWidget : public QWidget
+class DisplayCurrenciesWidget : public QDialog
 {
     Q_OBJECT
 

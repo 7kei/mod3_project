@@ -74,6 +74,42 @@
     <VcpkgTriplet>x64-windows</VcpkgTriplet>
     <VcpkgHostTriplet>x64-windows</VcpkgHostTriplet>
   </PropertyGroup>
+  <PropertyGroup Label="QtDeploy" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <QtDeploy>true</QtDeploy>
+    <QtDeployNoPatchQt>true</QtDeployNoPatchQt>
+    <QtDeployNoPlugins>true</QtDeployNoPlugins>
+    <QtDeployNoTranslations>true</QtDeployNoTranslations>
+    <QtDeployNoSystemD3dCompiler>true</QtDeployNoSystemD3dCompiler>
+    <QtDeployNoVirtualKeyboard>true</QtDeployNoVirtualKeyboard>
+    <QtDeployWebkit2>skip</QtDeployWebkit2>
+    <QtDeployAngle>skip</QtDeployAngle>
+    <QtDeployNoOpenglSw>true</QtDeployNoOpenglSw>
+    <QtDeployNoLibraries>
+    </QtDeployNoLibraries>
+    <QtDeployNoQuickImport>
+    </QtDeployNoQuickImport>
+    <QtDeployCompilerRuntime>skip</QtDeployCompilerRuntime>
+    <QtDeployDebugRelease>debug</QtDeployDebugRelease>
+    <QtDeployVsContent>true</QtDeployVsContent>
+  </PropertyGroup>
+  <PropertyGroup Label="QtDeploy" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <QtDeploy>true</QtDeploy>
+    <QtDeployNoPatchQt>true</QtDeployNoPatchQt>
+    <QtDeployNoPlugins>true</QtDeployNoPlugins>
+    <QtDeployNoTranslations>true</QtDeployNoTranslations>
+    <QtDeployNoSystemD3dCompiler>true</QtDeployNoSystemD3dCompiler>
+    <QtDeployNoVirtualKeyboard>true</QtDeployNoVirtualKeyboard>
+    <QtDeployWebkit2>skip</QtDeployWebkit2>
+    <QtDeployAngle>skip</QtDeployAngle>
+    <QtDeployNoOpenglSw>true</QtDeployNoOpenglSw>
+    <QtDeployNoLibraries>
+    </QtDeployNoLibraries>
+    <QtDeployNoQuickImport>
+    </QtDeployNoQuickImport>
+    <QtDeployCompilerRuntime>skip</QtDeployCompilerRuntime>
+    <QtDeployDebugRelease>release</QtDeployDebugRelease>
+    <QtDeployVsContent>true</QtDeployVsContent>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>

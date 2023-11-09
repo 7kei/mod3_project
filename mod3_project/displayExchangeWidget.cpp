@@ -2,12 +2,13 @@
 #include "displayExchangeWidget.h"
 #include "processing.h"
 
-DisplayExchangeWidget::DisplayExchangeWidget(QWidget* parent) : QWidget(parent)
+DisplayExchangeWidget::DisplayExchangeWidget(QWidget* parent) : QDialog(parent)
 {
 
     std::string* res = new std::string;
     *res = Processing::displayExchangeRate();
     label_ = new QLabel(tr(res->c_str()));
+    delete res;
 
     scrollArea = new QScrollArea;
     mainLayout = new QGridLayout;
@@ -20,8 +21,7 @@ DisplayExchangeWidget::DisplayExchangeWidget(QWidget* parent) : QWidget(parent)
     setLayout(mainLayout);
     setWindowTitle(tr("Current Exchange Rate"));
     setAttribute(Qt::WA_DeleteOnClose);
-
-    delete res;
+    
 }
 
 // Destructor

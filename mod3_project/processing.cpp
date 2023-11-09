@@ -11,8 +11,6 @@ namespace Processing
 
     std::string apiKey = "";
 
-    void reset() {};
-
     void toUppercase(char* charArray)
     {
         int i = 0;
@@ -75,7 +73,7 @@ namespace Processing
         }
 
         for (auto& elem : latestExchangeRateResp["rates"].items()) {
-            stringToReturn = stringToReturn + elem.key() + ", " + (std::string)elem.value() + "\n";
+            stringToReturn += elem.key() + ", " + elem.value().dump() + "\n";
         }
 
         return stringToReturn;
@@ -114,12 +112,13 @@ namespace Processing
         // Convert from usd to target currency
         toTargetCurrency = toUsd * (double)rates[toCurrency];
 
-        // Imbue locale for currency output
-        std::cout.imbue(std::locale(""));
-
         // Output
+        std::ostringstream stringstream;
+        
+        stringstream.imbue(std::locale(""));
+        stringstream << std::put_money(toTargetCurrency * 100) << " " << toCurrency << std::endl;
 
-        stringToReturn = std::to_string(toTargetCurrency) + " " + toCurrency + "\n";
+        stringToReturn = stringstream.str();
 
         return stringToReturn;
     }
