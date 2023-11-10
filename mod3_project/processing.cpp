@@ -9,7 +9,7 @@ namespace Processing
 
     using json = nlohmann::json;
 
-    std::string apiKey = "";
+    std::string apiKey = "INSERT_APIKEY_HERE";
 
     void toUppercase(char* charArray)
     {

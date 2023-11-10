@@ -62,7 +62,6 @@ void MainWidget::onPressDisplayExchangeButton()
 
 void MainWidget::onPressConvertCurrencyButton()
 {
-
     bool amountOk;
     double amountInput = QInputDialog::getDouble(this, tr("Amount"), tr("Starting amount:"), 0, INT_MIN, INT_MAX, 2, &amountOk);
 
@@ -72,34 +71,26 @@ void MainWidget::onPressConvertCurrencyButton()
     bool toCurrencyOk;
     QString toCurrency = QInputDialog::getText(this, tr("To Currency"), tr("To Currency:"), QLineEdit::Normal, tr("PHP"), &toCurrencyOk);
 
+    QString text;
+    QMessageBox* messageBox = new QMessageBox(this);
+    messageBox->setAttribute(Qt::WA_DeleteOnClose);
+    messageBox->setStyleSheet("QLabel{min-width: 300px;}");
+
     if (amountOk && fromCurrencyOk && toCurrencyOk) 
     {
         QByteArray fromCurrencyByteArray = fromCurrency.toLatin1();
         QByteArray toCurrencyByteArray = toCurrency.toLatin1();
         std::string output = Processing::convertCurrency(amountInput, fromCurrencyByteArray.data(), toCurrencyByteArray.data());
 
-        QString text;
         if (output != "NULL") 
             text = tr("The converted amount is:\n") + tr(output.c_str());
         else
             text = tr("Input is invalid or there's no network connection!");
-
-        QMessageBox* messageBox = new QMessageBox(this);
-        messageBox->setText(text);
-        messageBox->setStyleSheet("QLabel{min-width: 400px;}");
-        messageBox->setWindowTitle(tr("Converted amount:"));
-        messageBox->setAttribute(Qt::WA_DeleteOnClose);
-        messageBox->exec();
     }
     else 
-    {
-        QMessageBox* messageBox = new QMessageBox(this);
-        messageBox->setText(tr("Canceled!"));
-        messageBox->setStyleSheet("QLabel{min-width: 200px;}");
-        messageBox->setWindowTitle(tr("Canceled!"));
-        messageBox->setAttribute(Qt::WA_DeleteOnClose);
-        messageBox->exec();
-    }
+        text = tr("Canceled!");
 
-
+    messageBox->setText(text);
+    messageBox->setWindowTitle(tr("Converted amount:"));
+    messageBox->exec();
 }
